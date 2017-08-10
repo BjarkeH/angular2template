@@ -56,16 +56,16 @@ gulp.task('serve', ()=> {
 // publish templates
 gulp.task('copy:templates', ()=> {
   return gulp
-    .src('./src/app/**/*.html')
+    .src('./src/**/*.html')
     .pipe(flatten())
     .pipe(gulp.dest('./dist/templates/'));
 });
 
 // Watch task
 gulp.task('watch', ()=> {
-  gulp.watch('./src/app/**/*.ts', ['compile']);
+  gulp.watch('./src/**/*.ts', ['compile']);
   gulp.watch('./src/index.html', ['copy:indexfile']);
-  gulp.watch('./src/app/**/*.html', ['copy:templates']);
+  gulp.watch('./src/**/*.html', ['copy:templates']);
 });
 
 gulp.task('default', ['clean:dist' , 'bundle', 'compile', 'copy:indexfile', 'copy:templates', 'serve', 'watch'], ()=> {
