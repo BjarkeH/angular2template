@@ -8,6 +8,6 @@
 
 // Import the platform-browser-dynamics
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
-import {AppModule} from './app.module';
-// Bootstrap the main component for the application
+import {AppModule} from './MainModule/app.module';
+// Bootstrap the main/parent module for the application
 platformBrowserDynamic().bootstrapModule(AppModule)

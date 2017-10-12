@@ -2,13 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
+    <base href="/"> <!-- Necessary for routing to work in angular 2 and above -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">    
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">        
+    <link rel="stylesheet" href="./assets/css/stylesheet.css">
     <title>Angular 2 Template</title>
   </head>
   <body>
-    <app-root>Loading...</app-root>
+    <home-page></home-page>
+    <!-- <app-root>Loading...</app-root> -->
     
     <script src="polyfills.bundled.js"></script>
     <script src="vendors.bundled.js"></script>
