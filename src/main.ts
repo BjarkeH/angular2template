@@ -8,6 +8,8 @@
 
 // Import the platform-browser-dynamics
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {enableProdMode} from '@angular/core';
 import {AppModule} from './MainModule/app.module';
 // Bootstrap the main/parent module for the application
-platformBrowserDynamic().bootstrapModule(AppModule)
+enableProdMode();
+platformBrowserDynamic().bootstrapModule(AppModule);

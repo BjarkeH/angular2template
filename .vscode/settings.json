@@ -8,7 +8,7 @@
     "**/.DS_Store": true,
     "**/.vscode": true,
     "**/node_modules": true,
-    // "**/dist": true,
+    "**/dist": true,
     "**/webpack.config.app.js": true,
     "**/webpack.config.dependencies.js": true,
     "**/tsconfig.json": true,

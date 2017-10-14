@@ -67,7 +67,7 @@ gulp.task('serve', ()=> {
     .src('./dist/')
     .pipe(server({
       livereload: true,
-      open: false,
+      open: true,
       defaultFile: 'index.html',
       port: Port
     }));
