@@ -5,15 +5,14 @@
 * refactor distributional folder
 */
 
-const Port = "80";
-
 const gulp = require('gulp');
 const server = require('gulp-server-livereload');
 const concat = require('gulp-concat');
 const flatten = require('gulp-flatten');
-const sass = require("gulp-sass");
+const jade = require('gulp-jade');
+const sass = require('gulp-sass');
 const plumber = require('gulp-plumber');
-const pug = require("gulp-pug");
+const pug = require('gulp-pug');
 
 const del = require('del');
 const webpack = require('webpack-stream');
@@ -21,11 +20,8 @@ const webpack = require('webpack-stream');
 // Compiles Application components
 gulp.task('compile', ()=> {
   return gulp
-    .src('')    
+    .src('')
     .pipe(webpack( require('./webpack.config.app.js') ))
-    .on('error', function handleError(){
-      this.emit('end'); // Recover from errors // - Webpack won't cooperate with plumber ;/ 
-    })
     .pipe(gulp.dest('./dist'));
 });
 
@@ -42,17 +38,6 @@ gulp.task('clean:dist', ()=> {
   return del('./dist/**/*');
 });
 
-gulp.task("compile:sass", ()=> {
-  return gulp
-    .src(["./src/**/*.sass", "./src/**/*.scss"])
-    .pipe(plumber())
-    .pipe(sass({
-      outputStyle: "expanded"      
-    }))
-    .pipe(flatten())
-    .pipe(gulp.dest("./dist/assets/css/"));
-});
-
 // Copying html and templates to distributional folder
 gulp.task('copy:indexfile', ()=> {
   return gulp
@@ -60,40 +45,65 @@ gulp.task('copy:indexfile', ()=> {
     .pipe(gulp.dest('./dist/'));
 })
 
-
-// - Might want to use gulp-connect for this 
 gulp.task('serve', ()=> {
   return gulp
     .src('./dist/')
     .pipe(server({
       livereload: true,
-      open: true,
+      open: false,
       defaultFile: 'index.html',
-      port: Port
+      port: '8080'
     }));
 });
 
 // publish templates
 gulp.task('copy:templates', ()=> {
+  // return gulp
+  //   .src(['./src/**/*.html', '!./src/index.html'])
+  //   .pipe(flatten())
+  //   .pipe(gulp.dest('./dist/templates/'));
+});
+
+gulp.task('copy:templates:jade', ()=> {
   return gulp
-    .src(['./src/**/*.html', '!./src/index.html'])
+    .src('./src/**/*.jade')
+    .pipe(jade({
+      pretty: true
+    }))
     .pipe(flatten())
     .pipe(gulp.dest('./dist/templates/'));
 });
 
-gulp.task('copy:templates:pug', ()=> {
+gulp.task("copy:templates:pug", ()=> {
   return gulp
-    .src("./src/**/!(_)*.pug")
-    .pipe(plumber())
+    .src("./src/**/*.pug")
+    .pipe(flatten())
     .pipe(pug({
       pretty: true
     }))
-    .pipe(flatten())
     .pipe(gulp.dest("./dist/templates/"));
 });
-
-gulp.task('copy:fonts', ()=> {
-
+//- style.css
+gulp.task("compile:sass", ()=> {
+  return gulp
+    .src('./src/**/*.sass')
+    .pipe(plumber())
+    .pipe(sass({
+      outputStyle: 'expanded'
+    }))  
+    .pipe(flatten())
+    .pipe(gulp.dest('./dist/assets/css/'));    
+});
+//- style.min.css
+gulp.task("compile:sass:min", ()=> {
+  return gulp
+    .src('./src/**/*.sass')
+    .pipe(plumber())
+    .pipe(sass({
+      outputStyle: 'compressed'
+    }))
+    .pipe(flatten())
+    .pipe(gulp.dest('./dist/assets/css'));
 });
 
 // Watch task
@@ -101,12 +111,24 @@ gulp.task('watch', ()=> {
   gulp.watch('./src/**/*.ts', ['compile']);
   gulp.watch('./src/index.html', ['copy:indexfile']);
   gulp.watch('./src/**/*.html', ['copy:templates']);
+  gulp.watch('./src/**/*.jade', ['copy:templates:jade']);
   gulp.watch('./src/**/*.sass', ['compile:sass']);
-  gulp.watch('./src/**/*.pug', ['copy:templates:pug']);
 });
 
-gulp.task('default', ['clean:dist' , 'bundle', 'compile', 'compile:sass', 'copy:indexfile', 'copy:templates', 'copy:templates:pug', 'serve', 'watch'], ()=> {
-  console.log("\n *************");
-  console.log('Development Environment running on localhost:' + Port.toString());
-  console.log("\n *************\n");
+gulp.task("copy:fonts", ()=> {
+  return gulp
+    .src("./node_modules/bootstrap-sass/assets/fonts/**/*")
+    .pipe(flatten())
+    .pipe(gulp.dest("./dist/assets/fonts/bootstrap/"));
+});
+
+gulp.task("copy:images", ()=> {
+  return gulp
+    .src("./src/images/**/*")
+    .pipe(flatten())
+    .pipe(gulp.dest("./dist/assets/images/"));
+});
+
+gulp.task('default', ['clean:dist' , 'bundle', 'compile', 'compile:sass', 'compile:sass:min', 'copy:indexfile', 'copy:templates', 'copy:fonts', 'copy:images', 'copy:templates:jade', 'serve', 'watch'], ()=> {
+  console.log('Development Environment running');
 });
